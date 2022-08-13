@@ -3,19 +3,24 @@ package org.linlinjava.litemall.db.service;
 import com.alibaba.druid.util.StringUtils;
 import com.github.pagehelper.PageHelper;
 import org.linlinjava.litemall.db.dao.LitemallGrouponMapper;
+import org.linlinjava.litemall.db.dao.ProgressingGrouponMapper;
 import org.linlinjava.litemall.db.domain.LitemallGroupon;
 import org.linlinjava.litemall.db.domain.LitemallGrouponExample;
+import org.linlinjava.litemall.db.domain.ProgressingGrouponVO;
 import org.linlinjava.litemall.db.util.GrouponConstant;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class LitemallGrouponService {
     @Resource
     private LitemallGrouponMapper mapper;
+    @Resource
+    private ProgressingGrouponMapper progressingGrouponMapper;
 
     /**
      * 获取用户发起的团购记录
@@ -158,5 +163,9 @@ public class LitemallGrouponService {
         LitemallGrouponExample example = new LitemallGrouponExample();
         example.or().andRulesIdEqualTo(grouponRuleId).andDeletedEqualTo(false);
         return mapper.selectByExample(example);
+    }
+
+    public List<ProgressingGrouponVO> queryOnProgressingByProductId(String productId){
+        return progressingGrouponMapper.getProgressingGroups(productId);
     }
 }

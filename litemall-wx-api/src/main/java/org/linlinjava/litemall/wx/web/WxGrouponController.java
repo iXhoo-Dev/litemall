@@ -279,4 +279,14 @@ public class WxGrouponController {
         return ResponseUtil.ok(result);
     }
 
+    /**
+     * 根据产品获取正在开的团
+     * @param productId
+     * @return
+     */
+    @GetMapping("progressing")
+    public Object getProgressingGroupon(@RequestParam String productId){
+        return grouponService.queryOnProgressingByProductId(productId);
+    }
+
 }

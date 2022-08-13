@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.linlinjava.litemall.db.dao.ProgressingGrouponMapper">
+    <resultMap id="progressingGrouponList" type="org.linlinjava.litemall.db.domain.ProgressingGrouponVO">
+        <result column="target_count" jdbcType="INTEGER" property="targetCount"/>
+        <result column="current_count" jdbcType="INTEGER" property="currentCount"/>
+        <result column="creator_user_id" jdbcType="INTEGER" property="creatorUserId"/>
+        <result column="avatar" jdbcType="VARCHAR" property="creatorUserAvatar"/>
+        <result column="nickname" jdbcType="VARCHAR" property="creatorUserName"/>
+    </resultMap>
+    <select id="getProgressingGroups" parameterType="string" resultMap="progressingGrouponList">
+        SELECT groupon.groupon_id,
+               sub.current_count,
+               rule.discount_member AS 'target_count',
+               groupon.rules_id,
+               groupon.creator_user_id,
+               u.avatar,
+               u.nickname
+        FROM `litemall_groupon` groupon
+                 LEFT JOIN litemall_groupon_rules rule ON rule.id = groupon.rules_id
+                 LEFT JOIN litemall_user u ON u.id = groupon.creator_user_id
+                 LEFT JOIN (SELECT g.groupon_id, COUNT(*) + 1 as 'current_count'
+                            from litemall_groupon g
+                            WHERE g.groupon_id != 0
+                            GROUP BY g.groupon_id) sub on sub.groupon_id = groupon.id
+        WHERE groupon.`status` = 1
+          AND groupon.groupon_id = 0
+          AND rule.goods_id = #{_parameter,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

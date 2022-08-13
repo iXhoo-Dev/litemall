@@ -32,6 +32,8 @@ Page({
     isGroupon: false, //标识是否是一个参团购买
     soldout: false,
     canWrite: false, //用户是否获取了保存相册的权限
+    progressingGroup:[],
+    activeCardIndex:-1
   },
 
   // 页面分享
@@ -127,13 +129,30 @@ Page({
   },
 
   // 获取商品信息
-  getGoodsInfo: function() {
+  getGoodsInfo: function() { 
     let that = this;
+    util.request(api.GroupOnProgressing,{
+      productId: that.data.id
+    }).then((res)=>{
+      res.map(i=>{
+        let percentage = Math.ceil(i.currentCount/i.targetCount)
+        if(percentage>100){
+          percentage=100
+        }
+        if(percentage<0){
+          percentage=0
+        }
+        i.percentage = percentage
+      })
+      that.setData({
+        progressingGroup:res
+      })
+      this.rollGroupBuyCard()
+    })
     util.request(api.GoodsDetail, {
       id: that.data.id
-    }).then(function(res) {
-      if (res.errno === 0) {
-
+    }).then(function(res) { 
+      if (res.errno === 0) { 
         let _specificationList = res.data.specificationList;
         let _tmpPicUrl = res.data.productList[0].url;
         //console.log("pic: "+_tmpPicUrl);
@@ -664,6 +683,26 @@ Page({
   onReady: function() {
     // 页面渲染完成
 
-  }
+  },
+  rollGroupBuyCard:function(){
+    let that = this
+    let group = that.data.progressingGroup
+    if(that.data.progressingGroup.length>0 && that.data.activeCardIndex<0){
+      that.setData({ 
+        activeCardIndex : 0
+      })
+    }   
+    group.map(i=>i.active=false)
+    group[that.data.activeCardIndex].active = true 
 
+    setTimeout(function(){ 
+      // that.activeCardIndex=(that.activeCardIndex+1)%that.progressingGroup.length
+      that.setData({
+        progressingGroup:group,
+        activeCardIndex:(that.data.activeCardIndex+1)%that.data.progressingGroup.length
+      })
+      that.rollGroupBuyCard()  
+      // console.log(that.activeCardIndex)
+    },5*1000) 
+  }
 })

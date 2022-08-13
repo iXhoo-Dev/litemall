@@ -89,6 +89,7 @@ module.exports = {
   GroupOnMy: WxApiRoot + 'groupon/my', //团购API-我的团购
   GroupOnDetail: WxApiRoot + 'groupon/detail', //团购API-详情
   GroupOnJoin: WxApiRoot + 'groupon/join', //团购API-详情
+  GroupOnProgressing: WxApiRoot + 'groupon/progressing', //查询正在进行的团购信息
 
   CouponList: WxApiRoot + 'coupon/list', //优惠券列表
   CouponMyList: WxApiRoot + 'coupon/mylist', //我的优惠券列表
