@@ -47,6 +47,7 @@ public class WxGrouponRuleService {
                 continue;
 
             GrouponRuleVo grouponRuleVo = new GrouponRuleVo();
+            grouponRuleVo.setGrouponId(rule.getId());
             grouponRuleVo.setId(goods.getId());
             grouponRuleVo.setName(goods.getName());
             grouponRuleVo.setBrief(goods.getBrief());

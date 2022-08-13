@@ -177,6 +177,7 @@ Page({
 
         
         //如果是通过分享的团购参加团购，则团购项目应该与分享的一致并且不可更改
+        console.log('that.data.isGroupon',that.data.isGroupon)
         if (that.data.isGroupon) {
           let groupons = that.data.groupon;
           for (var i = 0; i < groupons.length; i++) {
@@ -415,6 +416,7 @@ Page({
   },
 
   onLoad: function(options) {
+    console.log('options',options)
     // 页面初始化 options为页面跳转所带来的参数
     if (options.id) {
       this.setData({
